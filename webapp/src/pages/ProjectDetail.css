@@ -1,0 +1,143 @@
+.gallery-container {
+    padding-top: 80px;
+    background: #0a0a0a;
+    min-height: 100vh;
+}
+
+/* ── Header ─────────────────────────────────── */
+.gallery-header {
+    padding: 48px 60px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.gallery-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: #f5f2ee;
+}
+
+.gallery-meta {
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #888;
+}
+
+/* ── Back button ────────────────────────────── */
+.back-btn {
+    position: fixed;
+    top: 100px;
+    left: 40px;
+    background: none;
+    padding: 0;
+    border: none;
+    color: #ffffff;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    z-index: 100;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease, gap 0.3s ease;
+}
+
+.back-btn::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: #ffffff;
+    transition: width 0.3s ease;
+}
+
+.back-btn:hover {
+    opacity: 1;
+    gap: 16px;
+}
+
+.back-btn:hover::before {
+    width: 48px;
+}
+
+/* ── Masonry 3 colonne ──────────────────────── */
+.masonry-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding: 0 60px 80px;
+}
+
+.masonry-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* ── Singola immagine ───────────────────────── */
+.img-wrapper {
+    width: 100%;
+    background: #1a1a1a;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.img-wrapper--loaded {
+    opacity: 1;
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.img-wrapper:hover img {
+    transform: scale(1.03);
+}
+
+/* ── Not found ──────────────────────────────── */
+.not-found {
+    color: #888;
+    text-align: center;
+    padding: 200px 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 1024px) {
+    .masonry-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0 32px 60px;
+    }
+
+    .gallery-header {
+        padding: 40px 32px 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .masonry-grid {
+        grid-template-columns: 1fr;
+        padding: 0 16px 48px;
+    }
+
+    .gallery-header {
+        padding: 32px 16px 20px;
+    }
+
+    .back-btn {
+        left: 16px;
+        top: 88px;
+    }
+}

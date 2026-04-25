@@ -1,0 +1,179 @@
+.portfolio-page {
+    padding: 150px 60px 60px;
+    background: #0a0a0a;
+}
+
+.project-item {
+    display: flex; /* Cambiato da block a flex */
+    justify-content: space-between; /* Spinge testo a sx e foto a dx */
+    align-items: center; /* Allinea tutto al centro verticalmente */
+    text-decoration: none;
+    padding: 40px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.4s ease;
+}
+
+.project-item:hover {
+    padding-left: 20px;
+    padding-right: 20px; /* Bilancia l'effetto hover spostando un po' le foto */
+}
+
+.project-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: #fff;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.project-meta {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #888;
+}
+
+.separator { margin: 0 15px; opacity: 0.5; }
+
+.portfolio-hero-slider {
+    position: relative;
+    width: 100%;
+    height: 80vh; /* Occupa gran parte della visuale iniziale */
+    margin-bottom: 60px;
+    overflow: hidden;
+    background: #000;
+}
+
+.slideshow-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slideshow-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+    z-index: 1;
+}
+
+.slideshow-slide.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+.slideshow-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Riempie lo spazio come richiesto per il riempimento */
+}
+
+/* Overlay Testuale */
+.hero-slider-content {
+    position: absolute;
+    bottom: 60px;
+    left: 60px;
+    z-index: 10;
+    color: #fff;
+    pointer-events: none;
+}
+
+.hero-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #888;
+}
+
+.hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    font-weight: 300;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* Frecce (ispirate a style.css) */
+.slideshow-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    padding: 20px;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.3s;
+}
+
+.slideshow-arrow:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.slideshow-arrow.left { left: 20px; }
+.slideshow-arrow.right { right: 20px; }
+
+/* --- Regole originali mantenute --- */
+.portfolio-page {
+    padding: 100px 0 60px; /* Ridotto il top padding per accogliere lo slider */
+    background: #0a0a0a;
+}
+
+.portfolio-list {
+    padding: 0 60px;
+}
+
+/* Contenitore per le foto di anteprima */
+.project-preview-images {
+    display: flex;
+    gap: 15px; /* Spazio tra le foto */
+    opacity: 0.5; /* Manteniamo le foto un po' spente di default */
+    transition: opacity 0.4s ease;
+}
+
+/* Al passaggio del mouse sulla riga, le foto si "accendono" */
+.project-item:hover .project-preview-images {
+    opacity: 1;
+}
+
+/* Stile delle singole immagini di anteprima */
+.preview-img {
+    width: 140px;
+    height: 90px;
+    object-fit: cover; /* Taglia l'immagine senza deformarla */
+    border-radius: 4px; /* Angoli leggermente smussati (opzionale) */
+    transition: transform 0.4s ease, filter 0.4s ease;
+    filter: grayscale(100%); /* Le foto sono in bianco e nero di default */
+}
+
+/* Al passaggio del mouse, le foto tornano a colori e si ingrandiscono appena */
+.project-item:hover .preview-img {
+    filter: grayscale(0%);
+    transform: scale(1.05);
+}
+
+/* ── Responsive (Mobile) ───────────── */
+/* Su schermi piccoli mettiamo il testo sopra e le foto sotto */
+@media (max-width: 768px) {
+    .project-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .project-preview-images {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .preview-img {
+        width: 100px;
+        height: 70px;
+    }
+}
