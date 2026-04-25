@@ -1,0 +1,276 @@
+/* =============================================
+   HOME PAGE STYLES
+   ============================================= */
+
+/* ── Hero ───────────────────────────────────── */
+.hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    overflow: hidden;
+}
+
+.hero__slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+    transform: scale(1.04);
+    animation: none;
+}
+
+.hero__slide--active {
+    opacity: 1;
+    animation: kenburns 6s ease forwards;
+}
+
+@keyframes kenburns {
+    from { transform: scale(1.04); }
+    to   { transform: scale(1);    }
+}
+
+.hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            to bottom,
+            rgba(10,10,10,0.25) 0%,
+            rgba(10,10,10,0.1)  40%,
+            rgba(10,10,10,0.55) 100%
+    );
+    z-index: 1;
+}
+
+.hero__content {
+    position: absolute;
+    z-index: 2;
+    bottom: 14vh;
+    left: 8vw;
+    max-width: 600px;
+}
+
+.hero__label {
+    display: block;
+    margin-bottom: 16px;
+    animation: fadeUp 1s 0.3s both;
+}
+
+.hero__title {
+    font-family: var(--font-primary);
+    font-weight: 300;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-style: italic;
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    animation: fadeUp 1s 0.5s both;
+}
+
+.hero__title em {
+    display: block;
+    font-style: italic;
+    color: var(--accent);
+}
+
+.hero__sub {
+    margin-top: 16px;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--light-grey);
+    animation: fadeUp 1s 0.7s both;
+}
+
+.hero__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 40px;
+
+    /* Rettangolo ampio con solo contorno */
+    padding: 20px 56px;
+    background: transparent;
+    border: 1px solid #ffffff; /* Bordo bianco nitido */
+
+    /* Testo Bianco */
+    color: #ffffff;
+    font-family: var(--font-primary); /* Cormorant Garamond */
+    font-size: 1.3rem;
+    font-weight: 400;
+    font-style: italic;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+
+    cursor: pointer;
+    transition: all var(--transition);
+    animation: fadeUp 1s 0.9s both;
+}
+
+.hero__cta svg {
+    /* Dimensioni per una freccia normale e discreta */
+    width: 22px;
+    height: auto;
+
+    /* Allineamento ottico: a volte le font serif hanno una linea di base
+       che fa sembrare la freccia "troppo alta". Se serve, usa translateY */
+    transform: translateY(1px);
+
+    fill: none;
+    stroke: #ffffff; /* Colore della freccia */
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--transition);
+}
+
+.hero__cta:hover {
+    background: rgba(255, 255, 255, 0.1); /* Leggero riflesso interno */
+    border-color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.hero__cta:hover svg {
+    /* La freccia si sposta in avanti mantenendo la centratura */
+    transform: translateX(8px) translateY(1px);
+}
+
+.hero__dots {
+    position: absolute;
+    z-index: 2;
+    bottom: 48px;
+    right: 60px;
+    display: flex;
+    gap: 10px; /* Spazio leggermente ridotto per compensare lo spessore */
+}
+
+.hero__dot {
+    width: 35px;
+    height: 4px; /* Più spesso e visibile */
+    background: rgba(255, 255, 255, 0.25);
+    transition: all var(--transition);
+    cursor: pointer;
+    border-radius: 2px; /* Opzionale: arrotonda leggermente gli angoli per un look più morbido */
+}
+
+.hero__dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.hero__dot--active {
+    background: #ffffff; /* Bianco pieno */
+    width: 55px;         /* Si allunga, ma con uno spessore che riempie l'occhio */
+    opacity: 1;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 1024px) {
+    .services__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .featured__grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .featured__grid .featured__item:first-child {
+        grid-column: span 2;
+    }
+
+    .services__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero__content {
+        left: 5vw;
+        right: 5vw;
+        bottom: 12vh;
+    }
+
+    .footer__inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .featured__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .featured__grid .featured__item:first-child {
+        grid-column: span 1;
+    }
+}
+
+.hero__content {
+    position: absolute;
+    z-index: 2;
+    bottom: 10vh;
+    left: 5vw;
+    max-width: 800px;
+    pointer-events: none; /* Evita che il contenitore blocchi i click */
+}
+
+/* Contenitore Destro per CTA e Dots */
+.hero__controls-right {
+    position: absolute;
+    z-index: 2;
+    bottom: 48px;
+    right: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Allinea tutto a destra */
+    gap: 30px; /* Spazio tra bottone e dots */
+}
+
+/* Reset margini per la CTA nel nuovo contenitore */
+.hero__cta {
+    margin-top: 0;
+    padding: 16px 40px;
+    background: transparent;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    font-style: italic;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+/* Dots riposizionati relativamente al contenitore flex */
+.hero__dots {
+    position: static; /* Non più assoluto rispetto alla hero */
+    display: flex;
+    gap: 10px;
+}
+
+/* Responsive: su mobile impiliamo tutto al centro o riduciamo le dimensioni */
+@media (max-width: 768px) {
+    .hero__controls-right {
+        right: 5vw;
+        left: 5vw;
+        align-items: center;
+        bottom: 5vh;
+    }
+
+    .hero__content {
+        bottom: 25vh;
+        left: 5vw;
+        width: 90%;
+    }
+
+    .hero__title {
+        font-size: 2.5rem;
+    }
+}
