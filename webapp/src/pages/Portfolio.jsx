@@ -32,7 +32,7 @@ function PreviewImage({ src, alt }) {
                 src={src}
                 alt={alt}
                 className="preview-img"
-                style={{ display: loaded ? 'block' : 'none' }}
+                style={{ opacity: loaded ? 1 : 0 }}  // ← opacity invece di display:none
                 loading="lazy"
                 onLoad={() => setLoaded(true)}
                 onError={() => setError(true)}
