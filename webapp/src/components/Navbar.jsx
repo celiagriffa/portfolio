@@ -35,12 +35,6 @@ function Navbar({ menuOpen, setMenuOpen }) {
     const navbarClasses = `navbar ${!isHomePage ? 'navbar--solid' : ''} `;
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 40);
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
-
-    useEffect(() => {
         setMenuOpen(false);
     }, [location, setMenuOpen]);
 

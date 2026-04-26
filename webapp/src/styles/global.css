@@ -10,10 +10,12 @@
     --mid-grey:    #888888;
     --light-grey:  #cccccc;
     --white:       #f5f2ee;
-    --accent:      #c9a96e;   /* warm gold */
+    --accent:      #c9a96e;
 
-    --font-serif:  'Cormorant Garamond', Georgia, serif;
-    --font-sans:   'Montserrat', 'Helvetica Neue', sans-serif;
+    --font-serif:    'Cormorant Garamond', Georgia, serif;
+    --font-sans:     'Montserrat', 'Helvetica Neue', sans-serif;
+    --font-primary:  'Cormorant Garamond', Georgia, serif;   /* ← aggiunto */
+    --font-secondary:'Montserrat', 'Helvetica Neue', sans-serif; /* ← aggiunto */
 
     --nav-height:  72px;
     --transition:  0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
