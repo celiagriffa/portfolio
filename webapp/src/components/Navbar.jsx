@@ -32,11 +32,17 @@ function IconMail() {
 function Navbar({ menuOpen, setMenuOpen }) {
     const location = useLocation();
     const isHomePage = location.pathname === '/';
-    const navbarClasses = `navbar ${!isHomePage ? 'navbar--solid' : ''} `;
+    const navbarClasses = `navbar ${!isHomePage || menuOpen ? 'navbar--solid' : ''} `;
 
     useEffect(() => {
         setMenuOpen(false);
     }, [location, setMenuOpen]);
+
+    // Blocca lo scroll del body quando il drawer è aperto
+    useEffect(() => {
+        document.body.style.overflow = menuOpen ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+    }, [menuOpen]);
 
     return (
         <>
@@ -93,6 +99,43 @@ function Navbar({ menuOpen, setMenuOpen }) {
                     <span />
                 </button>
             </nav>
+
+            {/* Drawer mobile */}
+            <div className={`navbar__drawer ${menuOpen ? 'navbar__drawer--open' : ''}`}>
+                <ul className="navbar__drawer-links">
+                    {NAV_LINKS.map(({ to, label }) => (
+                        <li key={to}>
+                            <Link
+                                to={to}
+                                className={`navbar__drawer-link ${location.pathname === to ? 'navbar__drawer-link--active' : ''}`}
+                            >
+                                {label}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+
+                <div className="navbar__drawer-divider" />
+
+                <div className="navbar__drawer-social">
+                    <a
+                        href="https://www.instagram.com/cmgriffaph/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="navbar__drawer-social-link"
+                        aria-label="Instagram"
+                    >
+                        <IconInstagram />
+                    </a>
+                    <a
+                        href="mailto:celia.griffa@gmail.com"
+                        className="navbar__drawer-social-link"
+                        aria-label="Email"
+                    >
+                        <IconMail />
+                    </a>
+                </div>
+            </div>
         </>
     );
 }
