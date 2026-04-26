@@ -146,10 +146,9 @@
 .preview-img {
     width: 140px;
     height: 90px;
-    object-fit: cover; /* Taglia l'immagine senza deformarla */
-    border-radius: 4px; /* Angoli leggermente smussati (opzionale) */
-    transition: transform 0.4s ease, filter 0.4s ease;
-    filter: grayscale(100%); /* Le foto sono in bianco e nero di default */
+    object-fit: cover;
+    border-radius: 4px;
+    transition: opacity 0.3s ease, transform 0.4s ease, filter 0.4s ease;
 }
 
 /* Al passaggio del mouse, le foto tornano a colori e si ingrandiscono appena */
