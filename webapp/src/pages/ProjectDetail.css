@@ -1,6 +1,6 @@
 .gallery-container {
     padding-top: 80px;
-    background: #0a0a0a;
+    background: var(--black);
     min-height: 100vh;
 }
 
@@ -13,18 +13,20 @@
 }
 
 .gallery-title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-primary);
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 300;
+    font-style: italic;
     letter-spacing: 0.04em;
-    color: #f5f2ee;
+    color: var(--white);
 }
 
 .gallery-meta {
+    font-family: var(--font-secondary);
     font-size: 0.65rem;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: #888;
+    color: var(--mid-grey);
 }
 
 /* ── Back button ────────────────────────────── */
@@ -35,35 +37,36 @@
     background: none;
     padding: 0;
     border: none;
-    color: #ffffff;
+    color: var(--white);
+    font-family: var(--font-secondary);
     font-size: 0.6rem;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.35em;
     text-transform: uppercase;
     z-index: 100;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 12px;
-    opacity: 0.5;
-    transition: opacity 0.3s ease, gap 0.3s ease;
+    gap: 14px;
+    opacity: 0.45;
+    transition: opacity var(--transition), gap var(--transition);
 }
 
 .back-btn::before {
     content: '';
     display: block;
-    width: 32px;
+    width: 28px;
     height: 1px;
-    background: #ffffff;
-    transition: width 0.3s ease;
+    background: var(--white);
+    transition: width var(--transition);
 }
 
 .back-btn:hover {
     opacity: 1;
-    gap: 16px;
+    gap: 20px;
 }
 
 .back-btn:hover::before {
-    width: 48px;
+    width: 44px;
 }
 
 /* ── Masonry 3 colonne ──────────────────────── */
@@ -83,7 +86,7 @@
 /* ── Singola immagine ───────────────────────── */
 .img-wrapper {
     width: 100%;
-    background: #1a1a1a;
+    background: var(--mid-dark);
     overflow: hidden;
     opacity: 0;
     transition: opacity 0.6s ease;
@@ -106,12 +109,43 @@
 
 /* ── Not found ──────────────────────────────── */
 .not-found {
-    color: #888;
+    color: var(--mid-grey);
     text-align: center;
     padding: 200px 0;
-    font-size: 0.8rem;
-    letter-spacing: 0.2em;
+    font-family: var(--font-secondary);
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
+}
+
+/* ── Skeleton ───────────────────────────────── */
+@keyframes shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position: 600px 0; }
+}
+
+.skeleton {
+    background: linear-gradient(
+            90deg,
+            rgba(255,255,255,0.04) 25%,
+            rgba(255,255,255,0.09) 50%,
+            rgba(255,255,255,0.04) 75%
+    );
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+}
+
+.skeleton-gallery-title {
+    width: 320px;
+    height: 52px;
+    margin-bottom: 12px;
+    border-radius: 2px;
+}
+
+.skeleton-gallery-meta {
+    width: 200px;
+    height: 12px;
+    border-radius: 2px;
 }
 
 /* ── Responsive ─────────────────────────────── */
