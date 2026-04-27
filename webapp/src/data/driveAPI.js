@@ -15,11 +15,26 @@ const listChildren = async (folderId, mimeType = null) => {
     return data.files || [];
 };
 
+const MONTH_ORDER = {
+    January: 0, February: 1, March: 2, April: 3,
+    May: 4, June: 5, July: 6, August: 7,
+    September: 8, October: 9, November: 10, December: 11,
+};
+
 const parseProjectName = (folderName) => {
     const parts = folderName.split(' - ');
+    const dateStr = parts[1]?.trim() || '';
+
+    // Controlla se la prima parola è un mese conosciuto
+    const [first, second] = dateStr.split(' ');
+    const hasMonth = first in MONTH_ORDER;
+
     return {
         title: parts[0]?.trim() || folderName,
-        date: parts[1]?.trim() || '',
+        date: dateStr,
+        month: hasMonth ? first : '',
+        year: hasMonth ? (second ? parseInt(second, 10) : 0) : (first ? parseInt(first, 10) : 0),
+        monthIndex: hasMonth ? MONTH_ORDER[first] : -1, // -1 = mese assente, va in fondo
         location: parts[2]?.trim() || '',
     };
 };
@@ -73,7 +88,10 @@ export const loadProjects = async () => {
         })
     );
 
-    return projects.sort((a, b) => b.date.localeCompare(a.date));
+    return projects.sort((a, b) => {
+        if (b.year !== a.year) return b.year - a.year;
+        return b.monthIndex - a.monthIndex;
+    });
 };
 
 export function useProjects() {
@@ -114,12 +132,18 @@ export const loadHomeImages = async () => {
 
     const files = await listChildren(homeFolder.id);
 
-    return files.map((f) => ({
-        id: f.id,
-        src: thumbUrl(f.id, 1920),
-        // Rimuove l'estensione dal nome: "Mi Ami Festival.jpg" → "Mi Ami Festival"
-        title: f.name.replace(/\.[^/.]+$/, ''),
-    }));
+    return files
+        .map((f) => {
+            const nameWithoutExt = f.name.replace(/\.[^/.]+$/, '');
+            const match = nameWithoutExt.match(/^(\d+)\s*-\s*(.+)$/);
+            return {
+                id: f.id,
+                src: thumbUrl(f.id, 1920),
+                title: match ? match[2].trim() : nameWithoutExt,
+                order: match ? parseInt(match[1], 10) : Infinity,
+            };
+        })
+        .sort((a, b) => a.order - b.order);
 };
 
 export function useHomeImages() {
