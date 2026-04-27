@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './About.css';
+import { useAboutImage } from '../data/driveApi';
 
 function About() {
+    const { src } = useAboutImage();
+    const [imgLoaded, setImgLoaded] = useState(false);
+
     return (
         <div className="about-page fade-in">
             <div className="about-container">
-                {/* Immagine di Profilo / Backstage */}
+                {/* Immagine di Profilo */}
                 <div className="about__image">
-                    {/*<img src="/img/celia-profile.jpg" alt="Celia Griffa - Photographer" />*/}
+                    {/* Skeleton visibile finché l'immagine non è pronta */}
+                    {(!imgLoaded) && (
+                        <div className="about__image-skeleton" />
+                    )}
+
+                    {/* L'img viene montata appena Drive restituisce l'URL */}
+                    {src && (
+                        <img
+                            src={src}
+                            alt="Celia Griffa - Photographer"
+                            className={`about__img ${imgLoaded ? 'about__img--loaded' : ''}`}
+                            onLoad={() => setImgLoaded(true)}
+                        />
+                    )}
                 </div>
 
                 {/* Testo Biografico */}
