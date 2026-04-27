@@ -35,11 +35,13 @@ function About() {
                     <div className="about__description">
                         <p>
                             Celia Griffa is a concert and studio photographer based in Milan, Italy.
-                            Her work focuses on live music, bold lighting, and intimate portraits.
+                            Her work focuses on live music, capturing the raw atmosphere of concerts.
+                            After learning the basics of photography during her bachelor's degree in Communication Design at Politecnico di Milano,
+                            she has been developing her photography autonomously, working freelance or collaborating with various independent
+                            magazines and other creatives.
                         </p>
                         <p>
                             Available for tours, festivals, editorial work, and studio sessions.
-                            She captures the raw emotion and frozen time within every frame.
                         </p>
                     </div>
 
