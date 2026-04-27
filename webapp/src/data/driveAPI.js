@@ -148,3 +148,47 @@ export function useHomeImages() {
 
     return { images, loading };
 }
+export const loadAboutImage = async () => {
+    const folders = await listChildren(
+        ROOT_FOLDER_ID,
+        'application/vnd.google-apps.folder'
+    );
+
+    const aboutFolder = folders.find((f) => f.name === 'About');
+    if (!aboutFolder) {
+        console.error('Cartella "About" non trovata nella Root');
+        return null;
+    }
+
+    const files = await listChildren(aboutFolder.id);
+    if (!files.length) return null;
+
+    // Prende la prima (e unica) foto
+    return thumbUrl(files[0].id);
+};
+
+export function useAboutImage() {
+    const [src, setSrc] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const cached = sessionStorage.getItem('aboutImage');
+        if (cached) {
+            setSrc(cached);
+            setLoading(false);
+            return;
+        }
+
+        loadAboutImage().then((url) => {
+            if (url) {
+                setSrc(url);
+                sessionStorage.setItem('aboutImage', url);
+            }
+            setLoading(false);
+        }).catch(() => {
+            setLoading(false);
+        });
+    }, []);
+
+    return { src, loading };
+}
