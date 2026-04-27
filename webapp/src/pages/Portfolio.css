@@ -1,6 +1,8 @@
 .portfolio-page {
     padding: 150px 60px 60px;
     background: #0a0a0a;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .project-item {
@@ -158,22 +160,97 @@
 }
 
 /* ── Responsive (Mobile) ───────────── */
-/* Su schermi piccoli mettiamo il testo sopra e le foto sotto */
 @media (max-width: 768px) {
+    .portfolio-page {
+        overflow-x: hidden;
+    }
+
+    .portfolio-list {
+        padding: 0 24px;
+        overflow-x: hidden;
+    }
+
     .project-item {
         flex-direction: column;
         align-items: flex-start;
-        gap: 20px;
+        gap: 16px;
+        padding: 28px 0;
     }
 
+    /* Annulla l'effetto hover che aggiunge padding laterale */
+    .project-item:hover {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .project-title {
+        font-size: 2.2rem;
+    }
+
+    /* Le anteprime scorrono orizzontalmente dentro la riga
+       ma non causano overflow della pagina */
     .project-preview-images {
         width: 100%;
-        justify-content: flex-start;
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+        max-width: 100%;
+        flex-wrap: nowrap;
+        opacity: 1;
+    }
+
+    .project-preview-images::-webkit-scrollbar {
+        display: none;
+    }
+
+    .preview-img-wrapper {
+        flex-shrink: 0;
+        width: 110px;
+        height: 75px;
     }
 
     .preview-img {
-        width: 100px;
-        height: 70px;
+        width: 110px;
+        height: 75px;
+    }
+
+    .skeleton-img {
+        width: 110px;
+        height: 75px;
+    }
+
+    .skeleton-title {
+        width: 200px;
+        height: 36px;
+    }
+
+    /* Scroll-reveal: le foto partono spente e si illuminano
+       quando la riga entra nel viewport */
+    .project-preview-images {
+        opacity: 0.25;
+        transition: opacity 0.6s ease;
+    }
+
+    .project-item.is-visible .project-preview-images {
+        opacity: 1;
+    }
+
+    /* Disabilita l'hover su touch device */
+    .project-item:hover .project-preview-images {
+        opacity: inherit;
+    }
+
+    .project-item:hover .preview-img {
+        filter: grayscale(100%);
+        transform: none;
+    }
+
+    .project-item.is-visible .preview-img {
+        filter: grayscale(0%);
     }
 }
 
