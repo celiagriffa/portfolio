@@ -81,6 +81,8 @@ export const loadProjects = async () => {
                 folderName: folder.name,
                 title: info.title,
                 date: info.date,
+                year: info.year,
+                monthIndex: info.monthIndex,
                 location: info.location,
                 images: imageFiles.map((f) => thumbUrl(f.id, 1200)),
                 thumbs: thumbFiles.map((f) => thumbUrl(f.id, 400)),
