@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useProjects } from '../data/driveApi';
+import { useProjects } from '../data/driveAPI.js';
 import './ProjectDetail.css';
 
 function LazyImage({ src, alt, priority = false }) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useProjectsByCategory } from '../data/driveAPI';
+import { useProjectsByCategory } from '../data/driveAPI.js';
 import './Portfolio.css';
 
 function SkeletonItem() {
