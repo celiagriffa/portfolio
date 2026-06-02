@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { useProjects } from '../data/driveApi';
+import { Link, useParams } from 'react-router-dom';
+import { useProjectsByCategory } from '../data/driveAPI';
 import './Portfolio.css';
 
 function SkeletonItem() {
@@ -32,7 +32,7 @@ function PreviewImage({ src, alt }) {
                 src={src}
                 alt={alt}
                 className="preview-img"
-                style={{ opacity: loaded ? 1 : 0 }}  // ← opacity invece di display:none
+                style={{ opacity: loaded ? 1 : 0 }}
                 loading="lazy"
                 onLoad={() => setLoaded(true)}
                 onError={() => setError(true)}
@@ -41,7 +41,6 @@ function PreviewImage({ src, alt }) {
     );
 }
 
-/* Hook per rilevare se il device è touch/mobile */
 function useIsMobile() {
     const [isMobile, setIsMobile] = useState(false);
     useEffect(() => {
@@ -53,22 +52,21 @@ function useIsMobile() {
     return isMobile;
 }
 
-/* Singola riga del progetto con Intersection Observer su mobile */
-function ProjectItem({ project, isMobile }) {
+function ProjectItem({ project, isMobile, category }) {
     const ref = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
-        if (!isMobile) return; // Su desktop non serve l'observer
+        if (!isMobile) return;
         const el = ref.current;
         if (!el) return;
 
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) setIsVisible(true);
-                else setIsVisible(false); // Si spegne uscendo dal viewport
+                else setIsVisible(false);
             },
-            { threshold: 0.35 } // Si attiva quando il 35% della riga è visibile
+            { threshold: 0.35 }
         );
         observer.observe(el);
         return () => observer.disconnect();
@@ -77,7 +75,7 @@ function ProjectItem({ project, isMobile }) {
     return (
         <Link
             ref={ref}
-            to={`/portfolio/${project.id}`}
+            to={`/portfolio/${encodeURIComponent(category)}/${project.id}`}
             className={`project-item ${isMobile && isVisible ? 'is-visible' : ''}`}
         >
             <div className="project-info">
@@ -102,16 +100,28 @@ function ProjectItem({ project, isMobile }) {
 }
 
 function Portfolio() {
-    const { projects, loading } = useProjects();
+    const { category } = useParams();
+    const categoryName = decodeURIComponent(category || '');
+    const { projects, loading } = useProjectsByCategory(categoryName);
     const isMobile = useIsMobile();
 
     return (
         <div className="portfolio-page">
+            <div className="portfolio-category-header">
+                <h1 className="portfolio-category-title">{categoryName}</h1>
+                <div className="portfolio-category-divider" />
+            </div>
+
             <div className="portfolio-list">
                 {loading
                     ? [...Array(6)].map((_, i) => <SkeletonItem key={i} />)
                     : projects.map((project) => (
-                        <ProjectItem key={project.id} project={project} isMobile={isMobile} />
+                        <ProjectItem
+                            key={project.id}
+                            project={project}
+                            isMobile={isMobile}
+                            category={categoryName}
+                        />
                     ))
                 }
             </div>

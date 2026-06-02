@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import './About.css';
-import { useAboutImage } from '../data/driveApi';
+import { useAboutImage } from '../data/driveAPI';
 
 function About() {
-    const { src } = useAboutImage();
+    const { src, loading } = useAboutImage();
     const [imgLoaded, setImgLoaded] = useState(false);
 
     return (
         <div className="about-page fade-in">
             <div className="about-container">
-                {/* Immagine di Profilo */}
-                <div className="about__image">
-                    {/* Skeleton visibile finché l'immagine non è pronta */}
-                    {(!imgLoaded) && (
-                        <div className="about__image-skeleton" />
-                    )}
 
-                    {/* L'img viene montata appena Drive restituisce l'URL */}
+                {/* Immagine — occupa sempre lo spazio, skeleton o foto */}
+                <div className="about__image">
+                    <div className={`about__image-skeleton ${imgLoaded ? 'about__image-skeleton--hidden' : ''}`} />
                     {src && (
                         <img
                             src={src}

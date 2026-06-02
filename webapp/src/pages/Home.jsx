@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import CtaButton from "../components/Button.jsx";
+import { useNavigate } from 'react-router-dom';
+import CtaButton from '../components/Button.jsx';
 import { useHomeImages } from '../data/driveAPI.js';
 import './Home.css';
 
 function Hero() {
     const { images, loading } = useHomeImages();
     const [current, setCurrent] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (images.length === 0) return;
@@ -17,6 +18,9 @@ function Hero() {
     }, [images]);
 
     if (loading) return <section className="hero" />;
+
+    const currentImage = images[current];
+    const category = currentImage?.category || '';
 
     return (
         <section className="hero">
@@ -38,12 +42,21 @@ function Hero() {
 
             <div className="hero__content">
                 <h1 key={current} className="hero__title">
-                    {images[current]?.title}
+                    {currentImage?.title}
                 </h1>
+                {category && (
+                    <p key={`cat-${current}`} className="hero__subtitle">
+                        {category}
+                    </p>
+                )}
             </div>
 
             <div className="hero__controls-right">
-                <CtaButton to="/portfolio">View Portfolio</CtaButton>
+                {category && (
+                    <CtaButton onClick={() => navigate(`/portfolio/${encodeURIComponent(category)}`)}>
+                        Explore {category}
+                    </CtaButton>
+                )}
 
                 <div className="hero__dots">
                     {images.map((_, i) => (

@@ -1,26 +1,60 @@
 /* =============================================
-   GLOBAL STYLES – Ben Power Photography
+   GLOBAL STYLES – Celia Griffa Photography
    ============================================= */
 
 :root {
-    --black:       #0a0a0a;
-    --dark:        #111111;
-    --mid-dark:    #1a1a1a;
-    --grey:        #2e2e2e;
-    --mid-grey:    #888888;
-    --light-grey:  #cccccc;
-    --white:       #f5f2ee;
-    --accent:      #c9a96e;
+    /* ── Colori ──────────────────────────────── */
+    --black:          #0a0a0a;
+    --dark:           #111111;
+    --mid-dark:       #1a1a1a;
+    --grey:           #2e2e2e;
+    --mid-grey:       #888888;
+    --light-grey:     #cccccc;
+    --white:          #f5f2ee;
+    --accent:         #c9a96e;
 
-    --font-serif:    'Cormorant Garamond', Georgia, serif;
-    --font-sans:     'Montserrat', 'Helvetica Neue', sans-serif;
-    --font-primary:  'Cormorant Garamond', Georgia, serif;   /* ← aggiunto */
-    --font-secondary:'Montserrat', 'Helvetica Neue', sans-serif; /* ← aggiunto */
+    /* Overlay bg (navbar, drawer, dropdown) */
+    --bg-navbar:      rgba(8, 8, 8, 0.95);
+    --bg-overlay:     rgba(6, 6, 6, 0.97);
+    --bg-dropdown:    rgba(8, 8, 8, 0.97);
 
-    --nav-height:  72px;
-    --transition:  0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Bordi */
+    --border-subtle:  rgba(255, 255, 255, 0.06);
+    --border-dim:     rgba(255, 255, 255, 0.1);
+    --border-mid:     rgba(255, 255, 255, 0.12);
+
+    /* Testi secondari */
+    --text-dim:       rgba(255, 255, 255, 0.45);
+    --text-mid:       rgba(255, 255, 255, 0.65);
+    --text-muted:     rgba(255, 255, 255, 0.75);
+
+    /* ── Font ────────────────────────────────── */
+    --font-primary:   'Cormorant Garamond', Georgia, serif;
+    --font-secondary: 'Montserrat', 'Helvetica Neue', sans-serif;
+    --font-body:      'Inter', 'Helvetica Neue', sans-serif;
+
+    /* Alias semantici */
+    --font-serif:     var(--font-primary);
+    --font-sans:      var(--font-secondary);
+
+    /* ── Letter-spacing ──────────────────────── */
+    --ls-tight:   0.02em;   /* titoli serif */
+    --ls-base:    0.28em;   /* nav links, meta */
+    --ls-wide:    0.38em;   /* dropdown, categorie */
+    --ls-wider:   0.45em;   /* label uppercase piccoli */
+
+    /* ── Transizioni ─────────────────────────── */
+    --transition:       0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-fast:  0.2s ease;
+    --transition-slow:  0.6s cubic-bezier(0.25, 1, 0.5, 1);
+
+    /* ── Layout ──────────────────────────────── */
+    --nav-height:     72px;
+    --page-padding:   60px;
+    --page-padding-m: 24px;
 }
 
+/* ── Reset ───────────────────────────────────── */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -35,9 +69,9 @@ html {
 body {
     background-color: var(--black);
     color: var(--white);
-    font-family: var(--font-sans);
+    font-family: var(--font-secondary);
     font-weight: 300;
-    letter-spacing: 0.02em;
+    letter-spacing: var(--ls-tight);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -57,29 +91,23 @@ ul {
 }
 
 button {
-    font-family: var(--font-sans);
+    font-family: var(--font-secondary);
     cursor: pointer;
     border: none;
     background: none;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 4px;
-}
-::-webkit-scrollbar-track {
-    background: var(--black);
-}
-::-webkit-scrollbar-thumb {
-    background: var(--grey);
-}
+/* ── Scrollbar ───────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--grey); }
 
-/* Utility */
+/* ── Utility ─────────────────────────────────── */
 .section-label {
-    font-family: var(--font-sans);
+    font-family: var(--font-secondary);
     font-size: 0.65rem;
     font-weight: 500;
-    letter-spacing: 0.25em;
+    letter-spacing: var(--ls-wider);
     text-transform: uppercase;
     color: var(--accent);
 }
@@ -87,4 +115,33 @@ button {
 .page-wrapper {
     min-height: 100vh;
     padding-top: var(--nav-height);
+}
+
+/* ── Skeleton shimmer (condiviso tra Portfolio e ProjectDetail) ── */
+@keyframes shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position:  600px 0; }
+}
+
+.skeleton {
+    background: linear-gradient(
+            90deg,
+            rgba(255,255,255,0.05) 25%,
+            rgba(255,255,255,0.10) 50%,
+            rgba(255,255,255,0.05) 75%
+    );
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 4px;
+}
+
+/* ── Animazioni entrata (condivise) ──────────── */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }

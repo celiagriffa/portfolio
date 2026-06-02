@@ -24,8 +24,6 @@ const MONTH_ORDER = {
 const parseProjectName = (folderName) => {
     const parts = folderName.split(' - ');
     const dateStr = parts[1]?.trim() || '';
-
-    // Controlla se la prima parola è un mese conosciuto
     const [first, second] = dateStr.split(' ');
     const hasMonth = first in MONTH_ORDER;
 
@@ -34,7 +32,7 @@ const parseProjectName = (folderName) => {
         date: dateStr,
         month: hasMonth ? first : '',
         year: hasMonth ? (second ? parseInt(second, 10) : 0) : (first ? parseInt(first, 10) : 0),
-        monthIndex: hasMonth ? MONTH_ORDER[first] : -1, // -1 = mese assente, va in fondo
+        monthIndex: hasMonth ? MONTH_ORDER[first] : -1,
         location: parts[2]?.trim() || '',
     };
 };
@@ -42,29 +40,8 @@ const parseProjectName = (folderName) => {
 export const thumbUrl = (fileId) =>
     `https://lh3.googleusercontent.com/d/${fileId}`;
 
-export const loadProjects = async () => {
-    const rootContent = await listChildren(
-        ROOT_FOLDER_ID,
-        'application/vnd.google-apps.folder'
-    );
-
-    console.log('Cartelle nella root:', rootContent);
-
-    const workFolder = rootContent.find(f => f.name === 'Work');
-
-    if (!workFolder) {
-        console.error('Cartella "Work" non trovata nella Root');
-        return [];
-    }
-
-    console.log('Work folder trovata:', workFolder);
-
-    const projectFolders = await listChildren(
-        workFolder.id,
-        'application/vnd.google-apps.folder'
-    );
-
-    console.log('Progetti dentro Work:', projectFolders);
+const loadProjectsFromFolder = async (folderId, categoryName) => {
+    const projectFolders = await listChildren(folderId, 'application/vnd.google-apps.folder');
 
     const projects = await Promise.all(
         projectFolders.map(async (folder) => {
@@ -79,13 +56,14 @@ export const loadProjects = async () => {
             return {
                 id: folder.id,
                 folderName: folder.name,
+                category: categoryName,
                 title: info.title,
                 date: info.date,
                 year: info.year,
                 monthIndex: info.monthIndex,
                 location: info.location,
-                images: imageFiles.map((f) => thumbUrl(f.id, 1200)),
-                thumbs: thumbFiles.map((f) => thumbUrl(f.id, 400)),
+                images: imageFiles.map((f) => thumbUrl(f.id)),
+                thumbs: thumbFiles.map((f) => thumbUrl(f.id)),
             };
         })
     );
@@ -94,6 +72,40 @@ export const loadProjects = async () => {
         if (b.year !== a.year) return b.year - a.year;
         return b.monthIndex - a.monthIndex;
     });
+};
+
+export const loadCategories = async () => {
+    const rootContent = await listChildren(ROOT_FOLDER_ID, 'application/vnd.google-apps.folder');
+    const workFolder = rootContent.find(f => f.name === 'Work');
+    if (!workFolder) return [];
+
+    const categoryFolders = await listChildren(workFolder.id, 'application/vnd.google-apps.folder');
+    return categoryFolders.map(f => ({ id: f.id, name: f.name }));
+};
+
+export const loadProjects = async () => {
+    const rootContent = await listChildren(ROOT_FOLDER_ID, 'application/vnd.google-apps.folder');
+    const workFolder = rootContent.find(f => f.name === 'Work');
+    if (!workFolder) return [];
+
+    const categoryFolders = await listChildren(workFolder.id, 'application/vnd.google-apps.folder');
+    const allProjects = await Promise.all(
+        categoryFolders.map(cat => loadProjectsFromFolder(cat.id, cat.name))
+    );
+
+    return allProjects.flat();
+};
+
+export const loadProjectsByCategory = async (categoryName) => {
+    const rootContent = await listChildren(ROOT_FOLDER_ID, 'application/vnd.google-apps.folder');
+    const workFolder = rootContent.find(f => f.name === 'Work');
+    if (!workFolder) return [];
+
+    const categoryFolders = await listChildren(workFolder.id, 'application/vnd.google-apps.folder');
+    const categoryFolder = categoryFolders.find(f => f.name === categoryName);
+    if (!categoryFolder) return [];
+
+    return loadProjectsFromFolder(categoryFolder.id, categoryName);
 };
 
 export function useProjects() {
@@ -112,37 +124,87 @@ export function useProjects() {
             setProjects(data);
             sessionStorage.setItem('projects', JSON.stringify(data));
             setLoading(false);
-        }).catch(() => {          // ← manca questo
-            setLoading(false);    // altrimenti lo spinner non finisce mai
+        }).catch(() => {
+            setLoading(false);
         });
     }, []);
 
     return { projects, loading };
 }
 
-export const loadHomeImages = async () => {
-    const folders = await listChildren(
-        ROOT_FOLDER_ID,
-        'application/vnd.google-apps.folder'
-    );
+export function useProjectsByCategory(categoryName) {
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        if (!categoryName) return;
+
+        const cacheKey = `projects_${categoryName}`;
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+            setProjects(JSON.parse(cached));
+            setLoading(false);
+            return;
+        }
+
+        loadProjectsByCategory(categoryName).then((data) => {
+            setProjects(data);
+            sessionStorage.setItem(cacheKey, JSON.stringify(data));
+            setLoading(false);
+        }).catch(() => {
+            setLoading(false);
+        });
+    }, [categoryName]);
+
+    return { projects, loading };
+}
+
+export function useCategories() {
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const cached = sessionStorage.getItem('categories');
+        if (cached) {
+            setCategories(JSON.parse(cached));
+            setLoading(false);
+            return;
+        }
+
+        loadCategories().then((data) => {
+            setCategories(data);
+            sessionStorage.setItem('categories', JSON.stringify(data));
+            setLoading(false);
+        }).catch(() => {
+            setLoading(false);
+        });
+    }, []);
+
+    return { categories, loading };
+}
+
+export const loadHomeImages = async () => {
+    const folders = await listChildren(ROOT_FOLDER_ID, 'application/vnd.google-apps.folder');
     const homeFolder = folders.find((f) => f.name === 'Home');
-    if (!homeFolder) {
-        console.error('Package "Home" not found');
-        return [];
-    }
+    if (!homeFolder) return [];
 
     const files = await listChildren(homeFolder.id);
 
     return files
         .map((f) => {
             const nameWithoutExt = f.name.replace(/\.[^/.]+$/, '');
-            const match = nameWithoutExt.match(/^(\d+)\s*-\s*(.+)$/);
+            // Formato atteso: "1 - Categoria - Titolo"
+            const parts = nameWithoutExt.split(' - ');
+            const order = parts[0] ? parseInt(parts[0].trim(), 10) : Infinity;
+            const category = parts[1]?.trim() || '';
+            const title = parts[2]?.trim() || parts[1]?.trim() || nameWithoutExt;
+
             return {
                 id: f.id,
-                src: thumbUrl(f.id, 1920),
-                title: match ? match[2].trim() : nameWithoutExt,
-                order: match ? parseInt(match[1], 10) : Infinity,
+                src: thumbUrl(f.id),
+                title,
+                category,
+                order: isNaN(order) ? Infinity : order,
             };
         })
         .sort((a, b) => a.order - b.order);
@@ -155,41 +217,31 @@ export function useHomeImages() {
     useEffect(() => {
         const cached = sessionStorage.getItem('homeImages');
         if (cached) {
-            const parsed = JSON.parse(cached);
-            console.log('Home images (from cache):', parsed);
-            setImages(parsed);
+            setImages(JSON.parse(cached));
             setLoading(false);
             return;
         }
 
         loadHomeImages().then((data) => {
-            console.log('Home images (from Drive):', data);
             setImages(data);
             sessionStorage.setItem('homeImages', JSON.stringify(data));
             setLoading(false);
-        }).catch(() => {          // ← manca questo
-            setLoading(false);    // altrimenti lo spinner non finisce mai
+        }).catch(() => {
+            setLoading(false);
         });
     }, []);
 
     return { images, loading };
 }
-export const loadAboutImage = async () => {
-    const folders = await listChildren(
-        ROOT_FOLDER_ID,
-        'application/vnd.google-apps.folder'
-    );
 
+export const loadAboutImage = async () => {
+    const folders = await listChildren(ROOT_FOLDER_ID, 'application/vnd.google-apps.folder');
     const aboutFolder = folders.find((f) => f.name === 'About');
-    if (!aboutFolder) {
-        console.error('Cartella "About" non trovata nella Root');
-        return null;
-    }
+    if (!aboutFolder) return null;
 
     const files = await listChildren(aboutFolder.id);
     if (!files.length) return null;
 
-    // Prende la prima (e unica) foto
     return thumbUrl(files[0].id);
 };
 

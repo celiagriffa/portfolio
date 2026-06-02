@@ -6,7 +6,7 @@
 
 /* ── Header ─────────────────────────────────── */
 .gallery-header {
-    padding: 48px 60px 32px;
+    padding: 48px var(--page-padding) 32px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -17,14 +17,14 @@
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 300;
     font-style: italic;
-    letter-spacing: 0.04em;
+    letter-spacing: var(--ls-tight);
     color: var(--white);
 }
 
 .gallery-meta {
     font-family: var(--font-secondary);
     font-size: 0.65rem;
-    letter-spacing: 0.28em;
+    letter-spacing: var(--ls-base);
     text-transform: uppercase;
     color: var(--mid-grey);
 }
@@ -40,7 +40,7 @@
     color: var(--white);
     font-family: var(--font-secondary);
     font-size: 0.6rem;
-    letter-spacing: 0.35em;
+    letter-spacing: var(--ls-base);
     text-transform: uppercase;
     z-index: 100;
     cursor: pointer;
@@ -69,12 +69,12 @@
     width: 44px;
 }
 
-/* ── Masonry 3 colonne ──────────────────────── */
+/* ── Masonry ────────────────────────────────── */
 .masonry-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
-    padding: 0 60px 80px;
+    padding: 0 var(--page-padding) 80px;
 }
 
 .masonry-col {
@@ -89,7 +89,7 @@
     background: var(--mid-dark);
     overflow: hidden;
     opacity: 0;
-    transition: opacity 0.6s ease;
+    transition: opacity var(--transition-slow);
 }
 
 .img-wrapper--loaded {
@@ -114,27 +114,11 @@
     padding: 200px 0;
     font-family: var(--font-secondary);
     font-size: 0.75rem;
-    letter-spacing: 0.25em;
+    letter-spacing: var(--ls-base);
     text-transform: uppercase;
 }
 
 /* ── Skeleton ───────────────────────────────── */
-@keyframes shimmer {
-    0%   { background-position: -600px 0; }
-    100% { background-position: 600px 0; }
-}
-
-.skeleton {
-    background: linear-gradient(
-            90deg,
-            rgba(255,255,255,0.04) 25%,
-            rgba(255,255,255,0.09) 50%,
-            rgba(255,255,255,0.04) 75%
-    );
-    background-size: 600px 100%;
-    animation: shimmer 1.4s infinite linear;
-}
-
 .skeleton-gallery-title {
     width: 320px;
     height: 52px;
@@ -155,9 +139,7 @@
         padding: 0 32px 60px;
     }
 
-    .gallery-header {
-        padding: 40px 32px 24px;
-    }
+    .gallery-header { padding: 40px 32px 24px; }
 }
 
 @media (max-width: 600px) {
@@ -166,12 +148,7 @@
         padding: 0 16px 48px;
     }
 
-    .gallery-header {
-        padding: 32px 16px 20px;
-    }
+    .gallery-header { padding: 32px 16px 20px; }
 
-    .back-btn {
-        left: 16px;
-        top: 88px;
-    }
+    .back-btn { left: 16px; top: 88px; }
 }

@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useCategories } from '../data/driveAPI';
 import './Navbar.css';
 
 const NAV_LINKS = [
-    { to: '/portfolio', label: 'Work' },
-    { to: '/about',     label: 'About' },
-    { to: '/contact',   label: 'Contact' },
+    { to: '/about',   label: 'About' },
+    { to: '/contact', label: 'Contact' },
 ];
 
-/* ── Icona Instagram ────────────────────────── */
 function IconInstagram() {
     return (
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -19,7 +18,6 @@ function IconInstagram() {
     );
 }
 
-/* ── Icona Email ────────────────────────────── */
 function IconMail() {
     return (
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -31,31 +29,86 @@ function IconMail() {
 
 function Navbar({ menuOpen, setMenuOpen }) {
     const location = useLocation();
+    const navigate = useNavigate();
+    const { categories } = useCategories();
     const isHomePage = location.pathname === '/';
-    const navbarClasses = `navbar ${!isHomePage || menuOpen ? 'navbar--solid' : ''} `;
+
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [drawerWorkOpen, setDrawerWorkOpen] = useState(false);
+    const closeTimer = useRef(null);
+
+    const isWorkActive = location.pathname.startsWith('/portfolio');
+    const navbarClasses = `navbar ${!isHomePage || menuOpen ? 'navbar--solid' : ''}`;
+
+    const openDropdown = () => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+        setDropdownOpen(true);
+    };
+
+    const closeDropdown = () => {
+        closeTimer.current = setTimeout(() => setDropdownOpen(false), 120);
+    };
+
+    useEffect(() => () => clearTimeout(closeTimer.current), []);
 
     useEffect(() => {
         setMenuOpen(false);
+        setDropdownOpen(false);
+        setDrawerWorkOpen(false);
     }, [location, setMenuOpen]);
 
-    // Blocca lo scroll del body quando il drawer è aperto
     useEffect(() => {
         document.body.style.overflow = menuOpen ? 'hidden' : '';
         return () => { document.body.style.overflow = ''; };
     }, [menuOpen]);
 
+    const handleCategoryClick = (categoryName) => {
+        setDropdownOpen(false);
+        setMenuOpen(false);
+        navigate(`/portfolio/${encodeURIComponent(categoryName)}`);
+    };
+
     return (
         <>
             <nav className={navbarClasses}>
 
-                {/* Logo — sinistra */}
                 <Link to="/" className="navbar__logo">
                     <span className="navbar__logo-main">cmgriffa</span>
                     <span className="navbar__logo-sub">Photography</span>
                 </Link>
 
-                {/* Link — centro (assoluto) */}
                 <ul className="navbar__links">
+                    <li className="navbar__item--dropdown">
+                        <button
+                            className={`navbar__link navbar__link--btn ${isWorkActive ? 'navbar__link--active' : ''}`}
+                            onMouseEnter={openDropdown}
+                            onMouseLeave={closeDropdown}
+                        >
+                            Work
+                            <span className={`navbar__chevron ${dropdownOpen ? 'navbar__chevron--open' : ''}`} />
+                        </button>
+
+                        <div
+                            className={`navbar__dropdown ${dropdownOpen ? 'navbar__dropdown--open' : ''}`}
+                            onMouseEnter={openDropdown}
+                            onMouseLeave={closeDropdown}
+                        >
+                            {categories.map((cat) => (
+                                <button
+                                    key={cat.id}
+                                    className={`navbar__dropdown-item ${
+                                        location.pathname === `/portfolio/${encodeURIComponent(cat.name)}`
+                                            ? 'navbar__dropdown-item--active'
+                                            : ''
+                                    }`}
+                                    onClick={() => handleCategoryClick(cat.name)}
+                                >
+                                    {cat.name}
+                                </button>
+                            ))}
+                        </div>
+                    </li>
+
                     {NAV_LINKS.map(({ to, label }) => (
                         <li key={to}>
                             <Link
@@ -68,41 +121,55 @@ function Navbar({ menuOpen, setMenuOpen }) {
                     ))}
                 </ul>
 
-                {/* Social — destra */}
                 <div className="navbar__social">
-                    <a
-                        href="https://www.instagram.com/cmgriffaph/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="navbar__social-link"
-                        aria-label="Instagram"
-                    >
+                    <a href="https://www.instagram.com/cmgriffaph/" target="_blank" rel="noopener noreferrer"
+                       className="navbar__social-link" aria-label="Instagram">
                         <IconInstagram />
                     </a>
-                    <a
-                        href="mailto:celia.griffa@gmail.com"
-                        className="navbar__social-link"
-                        aria-label="Email"
-                    >
+                    <a href="mailto:celia.griffa@gmail.com" className="navbar__social-link" aria-label="Email">
                         <IconMail />
                     </a>
                 </div>
 
-                {/* Hamburger mobile */}
                 <button
                     className={`navbar__hamburger ${menuOpen ? 'navbar__hamburger--open' : ''}`}
                     onClick={() => setMenuOpen((v) => !v)}
                     aria-label="Toggle menu"
                 >
-                    <span />
-                    <span />
-                    <span />
+                    <span /><span /><span />
                 </button>
             </nav>
 
-            {/* Drawer mobile */}
             <div className={`navbar__drawer ${menuOpen ? 'navbar__drawer--open' : ''}`}>
                 <ul className="navbar__drawer-links">
+                    <li className="navbar__drawer-item--accordion">
+                        <button
+                            className={`navbar__drawer-link navbar__drawer-link--btn ${isWorkActive ? 'navbar__drawer-link--active' : ''}`}
+                            onClick={() => setDrawerWorkOpen((v) => !v)}
+                            aria-expanded={drawerWorkOpen}
+                        >
+                            Work
+                            <span className={`navbar__chevron ${drawerWorkOpen ? 'navbar__chevron--open' : ''}`} />
+                        </button>
+
+                        <ul className={`navbar__drawer-categories ${drawerWorkOpen ? 'navbar__drawer-categories--open' : ''}`}>
+                            {categories.map((cat) => (
+                                <li key={cat.id}>
+                                    <button
+                                        className={`navbar__drawer-category-item ${
+                                            location.pathname === `/portfolio/${encodeURIComponent(cat.name)}`
+                                                ? 'navbar__drawer-category-item--active'
+                                                : ''
+                                        }`}
+                                        onClick={() => handleCategoryClick(cat.name)}
+                                    >
+                                        {cat.name}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </li>
+
                     {NAV_LINKS.map(({ to, label }) => (
                         <li key={to}>
                             <Link
@@ -118,20 +185,11 @@ function Navbar({ menuOpen, setMenuOpen }) {
                 <div className="navbar__drawer-divider" />
 
                 <div className="navbar__drawer-social">
-                    <a
-                        href="https://www.instagram.com/cmgriffaph/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="navbar__drawer-social-link"
-                        aria-label="Instagram"
-                    >
+                    <a href="https://www.instagram.com/cmgriffaph/" target="_blank" rel="noopener noreferrer"
+                       className="navbar__drawer-social-link" aria-label="Instagram">
                         <IconInstagram />
                     </a>
-                    <a
-                        href="mailto:celia.griffa@gmail.com"
-                        className="navbar__drawer-social-link"
-                        aria-label="Email"
-                    >
+                    <a href="mailto:celia.griffa@gmail.com" className="navbar__drawer-social-link" aria-label="Email">
                         <IconMail />
                     </a>
                 </div>

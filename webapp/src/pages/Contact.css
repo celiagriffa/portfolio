@@ -1,7 +1,5 @@
-/* Assicurati che le variabili :root siano definite nel tuo file CSS globale (es. App.css o index.css) */
-
 .contact-page {
-    padding-top: 150px; /* Lascia spazio per la navbar */
+    padding-top: 150px;
     color: var(--white);
     min-height: 100vh;
 }
@@ -15,7 +13,7 @@
     margin: 0 auto;
 }
 
-/* ── Colonna Info (Sinistra) ────────────────── */
+/* ── Colonna Info ───────────────────────────── */
 .contact__info {
     flex: 1;
     max-width: 500px;
@@ -24,24 +22,26 @@
 .contact__label {
     font-family: var(--font-secondary);
     font-size: 0.7rem;
-    letter-spacing: 0.4em;
+    font-weight: 400;
+    letter-spacing: var(--ls-wide);
     text-transform: uppercase;
     color: var(--light-grey);
 }
 
 .contact__title {
     font-family: var(--font-primary);
-    font-size: clamp(3.5rem, 6vw, 5rem); /* Reso responsivo con clamp */
+    font-size: clamp(3.5rem, 6vw, 5rem);
     font-weight: 300;
     font-style: italic;
     margin: 10px 0 20px 0;
     line-height: 1;
+    color: var(--white);
 }
 
 .contact__subtitle {
     font-family: var(--font-secondary);
     font-size: 1rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-muted);
     font-weight: 300;
     line-height: 1.6;
     margin-bottom: 60px;
@@ -62,7 +62,7 @@
 .detail-title {
     font-family: var(--font-secondary);
     font-size: 0.6rem;
-    letter-spacing: 0.2em;
+    letter-spacing: var(--ls-base);
     text-transform: uppercase;
     color: var(--light-grey);
 }
@@ -72,6 +72,7 @@
     font-size: 1rem;
     font-weight: 300;
     text-decoration: none;
+    color: var(--white);
     transition: color var(--transition);
 }
 
@@ -79,7 +80,7 @@
     text-decoration: underline;
 }
 
-/* ── Colonna Form (Destra) ────────────────── */
+/* ── Colonna Form ───────────────────────────── */
 .contact__form {
     flex: 1;
     max-width: 600px;
@@ -98,7 +99,7 @@
 .form-group label {
     font-family: var(--font-secondary);
     font-size: 0.65rem;
-    letter-spacing: 0.2em;
+    letter-spacing: var(--ls-base);
     text-transform: uppercase;
     color: var(--light-grey);
 }
@@ -107,7 +108,7 @@
 .form-group textarea {
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid var(--border-mid);
     color: var(--white);
     font-family: var(--font-secondary);
     font-size: 1rem;
@@ -118,7 +119,7 @@
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-    color: rgba(255, 255, 255, 0.2);
+    color: var(--text-dim);
 }
 
 .form-group input:focus,
@@ -126,7 +127,7 @@
     border-bottom-color: var(--white);
 }
 
-/* ── Bottone Submit (Stile CTA) ───────────── */
+/* ── Submit ─────────────────────────────────── */
 .contact__submit {
     align-self: flex-start;
     margin-top: 20px;
@@ -138,18 +139,18 @@
     font-size: 1.3rem;
     font-weight: 400;
     font-style: italic;
-    letter-spacing: 0.05em;
+    letter-spacing: var(--ls-tight);
     cursor: pointer;
-    transition: all var(--transition);
+    transition: background var(--transition), color var(--transition), transform var(--transition);
 }
 
 .contact__submit:hover {
     background: var(--white);
-    color: #080808; /* Testo scuro quando il bottone diventa bianco */
+    color: var(--black);
     transform: translateY(-2px);
 }
 
-/* ── Responsive ───────────────────────────── */
+/* ── Responsive ─────────────────────────────── */
 @media (max-width: 900px) {
     .contact-container {
         flex-direction: column;
