@@ -89,6 +89,6 @@ No manual steps required.
 
 ## Contact
 
-- **GitHub:** [@celiagriffa](https://github.com/celiagriffa)
-- **LinkedIn:** *(add your link)*
-- **Email:** *(add your email)*
+- **GitHub:** [@erKripad](https://github.com/erKripad)
+- **LinkedIn:** *(https://www.linkedin.com/in/daniele-crippa-ab45492b7/)*
+- **Email:** *(daniele.crippa.k@gmail.com)*
